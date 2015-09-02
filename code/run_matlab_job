@@ -1,0 +1,56 @@
+#!/bin/csh
+
+#  Copyright (c) 2015, Vatche Ishakian, Benjamin Lubin, Jesse Shore
+#
+#  This file is part of the InvEigen Project.
+#
+#  InvEigen is free software: you can redistribute it and/or modify
+#  it under the terms of the GNU General Public License as published by
+#  the Free Software Foundation, version 3 of the License.
+#
+#  Foobar is distributed in the hope that it will be useful,
+#  but WITHOUT ANY WARRANTY; without even the implied warranty of
+#  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#  GNU General Public License for more details.
+#
+#  You should have received a copy of the GNU General Public License
+#  along with InvEigen.  If not, see <http://www.gnu.org/licenses/>.
+
+# this script is a companion script for submitmjobs for MATLAB apps
+# it demonstrates how the passed "task" can be used to make each of
+# the ntasks to perform a different task or use different data. If your
+# app is a function m-file, "task" needs to be passed as input argument.
+# If your app is a script m-file, "task" is automatically available
+# because it shares the same workspace as myscript.
+# Use one form or the other.
+
+unsetenv DISPLAY
+# IMPORTANT: DONOT indent any of the below statements
+matlab -nojvm -singleCompThread  >! myoutput_$MATLAB_TASK << MATLAB_ENV
+% The below works like a script m-file between MATLAB_ENVs
+task = $MATLAB_TASK;       % define matlab variable "task" from env variable
+ntasks = $MATLAB_NTASKS;   % define number of tasks
+outname = ['output' num2str(task)]; % associate output file name with "task"
+%myfunc(task, outname)     % example to pass "task" to a function "myfunc"
+%myscript                  % example to pass "task" to script "myscript"
+startup
+
+
+%wgraphv1(20,0.2,10,15,0,0.01,task,outname, -1, 0);
+%wgraphv1(24,0.2,10,18,0,0.01,task,outname, -1, 0);
+%%wgraphv1(21,0.2,10,14,0,0.01,task,outname, -1, 0);
+
+%wgraphv1(12,0.2,10,8,0,0.01,task,outname, -1, 0);
+%wgraphv1(16,0.2,10,14,0,0.01,task,outname, -1, 0);
+
+wgraphv1(16,0.5,10,12,0,0.01,task,outname, -1, 0);
+
+%wgraphv1(16,0.3,10,12,0,0.01,task,outname, -1, 0);
+%wgraphv1(16,0.2,10,12,0,0.01,task,outname, -1, 0);
+
+%wgraphv1(16,0.4,10,12,0,0.01,task,outname, -1, 0);
+
+exit                      % don't forget to exit
+MATLAB_ENV
+# keep this line to ensure newline
+

@@ -1,0 +1,55 @@
+#!/bin/csh
+
+#  Copyright (c) 2015, Vatche Ishakian, Benjamin Lubin, Jesse Shore
+#
+#  This file is part of the InvEigen Project.
+#
+#  InvEigen is free software: you can redistribute it and/or modify
+#  it under the terms of the GNU General Public License as published by
+#  the Free Software Foundation, version 3 of the License.
+#
+#  Foobar is distributed in the hope that it will be useful,
+#  but WITHOUT ANY WARRANTY; without even the implied warranty of
+#  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#  GNU General Public License for more details.
+#
+#  You should have received a copy of the GNU General Public License
+#  along with InvEigen.  If not, see <http://www.gnu.org/licenses/>.
+
+# This script is a companion script for submitmjobs for MATLAB apps
+# a number of individual tasks has been submitted to queue via submitmjobs
+# With hold_jid, this queued post processing job will start only after all
+# previous jobs have been completed. For this example, myfunc writes
+# the rank (task)  number to a file for each task. The post processing job
+# then load these files and write them to a single file, combine_output.mat:
+
+unsetenv DISPLAY
+# IMPORTANT: DONOT indent any of the below statements
+matlab -nojvm -singleCompThread  << MATLAB_ENV
+ntasks = $MATLAB_NTASKS
+%for task=1:ntasks
+%load(['output' num2str(task)],'rank')
+%a(task) = rank;
+%end
+%save('combine_output','a')
+
+K = 0.01;
+restarts = ntasks;
+%restarts =2933;
+alpha = -1;
+phi=0;
+
+
+Matrixsize = 16;
+lNum = 12;
+parseresults(restarts, Matrixsize,lNum,0.5,K,alpha,phi);
+
+
+%Matrixsize = 16;
+%lNum = 12;
+%parseresults(restarts, Matrixsize,lNum,0.3,K,alpha,phi);
+
+
+exit
+MATLAB_ENV
+# keep this line to ensure a newline
